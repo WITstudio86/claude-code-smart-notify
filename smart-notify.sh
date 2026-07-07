@@ -28,10 +28,10 @@ CLAUDE_TERMINAL="kitty"
 
 # 如果当前前台应用不是 Claude Code 所在的终端，则发送通知
 if [[ "$CURRENT_APP" != "$CLAUDE_TERMINAL" ]]; then
-    # macOS 系统通知
-    osascript -e 'display notification "Claude Code 已完成任务" with title "Claude Code"'
-    # macOS 弹窗对话框
+    # macOS 系统通知（后台，非阻塞）
+    osascript -e 'display notification "Claude Code 已完成任务" with title "Claude Code"' &
+    # 语音播报（后台，非阻塞 — 放在弹窗前，确保和通知同时触发）
+    say "Claude 已完成任务" &
+    # macOS 弹窗对话框（阻塞 — 必须放在最后，否则会卡住前面的通知和语音）
     osascript -e 'display dialog "Claude Code 已完成任务" buttons {"确定"} default button "确定"'
-    # 语音播报
-    say "Claude 已完成任务"
 fi
